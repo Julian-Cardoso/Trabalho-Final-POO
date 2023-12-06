@@ -14,6 +14,9 @@ class League {
         this.times = new ArrayList<>();
     }
 
+    public String getName(){
+        return this.name;
+    }
     public int leagueSize(){
         int tamanho = times.size();
         return tamanho;
@@ -47,6 +50,10 @@ class League {
             }
         }
                 return null;
+    }
+
+    public List<Team> getTeams(){
+        return times;
     }
 
     public void OverrideTeam(Team team){

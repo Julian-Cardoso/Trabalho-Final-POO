@@ -12,6 +12,15 @@ class Team {
         this.name = name;
     }
 
+    public int getPoints(){
+        return this.points;
+    }
+    public String getName(){
+        return this.name;
+    }
+    public int getGoals(){
+        return this.goals;
+    }
     public void addPlayer(Player player) {
         players.add(player);
     }
@@ -51,7 +60,7 @@ class Team {
             System.out.printf("  | %-20s | %-10d | %-10s |\n", player.name, player.wage, player.posicion);
         }
         
-        float teamValue = 0;
+        float teamValue = coach.wage;
         for(Player player : players) {
             teamValue += player.wage;
         }

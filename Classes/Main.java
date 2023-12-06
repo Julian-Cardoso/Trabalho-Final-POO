@@ -1,6 +1,8 @@
 package Classes;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
-// import java.util.regex.MatchResult;
 
 public class Main {
     public static void main(String[] arg) {
@@ -11,7 +13,8 @@ public class Main {
            while (true) {
                System.out.println("-----------------MENU-----------------");
                System.out.println("1- Adicionar Campeonato \n2- Adicionar Time \n3- Excluir Time \n"
-                   + "4- Contratar Jogador \n5- Demitir Jogador \n6- Contratar Tecnico \n7- Mostrar Time \n 8- Jogar Partida");
+                   + "4- Contratar Jogador \n5- Demitir Jogador \n6- Contratar Tecnico \n7- Mostrar Time \n"
+                   + "8- Jogar Partida \n9- Mostrar Tabela");
 
                 System.out.println("Escolha uma opção:");
 
@@ -176,7 +179,7 @@ public class Main {
                            if (equip != null && equip.players != null && equip.getCoach() != null) {
                                equip.ShowTeam();
                            } else {
-                               System.out.println("fail: time incompleto. Adicione um treinador ou jogador");
+                               System.out.println("fail: time incompleto. Adicione um treinador e/ou jogador");
                            }
                        } else {
                            System.out.println("fail: seu time não existe");
@@ -188,7 +191,7 @@ public class Main {
                            break;
                        }
                    
-                       if (team == null && league.leagueSize() < 2) {
+                       if (team == null || league.leagueSize() < 2) {
                            System.out.println("fail: não existe time(s) suficientes(Minimo de 2 times na Liga)");
                            break;
                        }
@@ -203,7 +206,7 @@ public class Main {
                            break;
                         }
                         
-                        System.out.println("Qual o time jogara em fora?");
+                        System.out.println("Qual o time jogara fora?");
                         league.showAllTeams();
                         String teamAwayName = scanner.nextLine();
                         Team teamAway = league.getTeam(teamAwayName);
@@ -211,8 +214,37 @@ public class Main {
                             System.out.println("fail: Time não encontrado");
                             break;
                         }
-                        // MatchResult matcher = new MatchResult(teamHome, teamAway);
-                        // matcher.playMatch(teamHome, teamAway);
+                        Partida matcher = new Partida(teamHome, teamAway);
+                        matcher.playMatch(teamHome, teamAway);
+
+                        int value1 = teamHome.points;
+                        int value2 = teamAway.points;
+                        System.out.printf("Pontos atuais %s: %d\n", teamHome.name, value1);
+                        System.out.printf("Pontos atuais %s: %d\n", teamAway.name, value2);
+
+                        break;
+                        case 9:
+                        if (league == null) {
+                           System.out.println("fail: não existe campeonato");
+                           break;
+                       }
+                   
+                       if (team == null || league.leagueSize() < 1) {
+                           System.out.println("fail: não existe time(s) suficientes(Minimo de 1 time na Liga)");
+                           break;
+                       }
+
+                       List<Team> sortedTeams = new ArrayList<>(league.getTeams());
+                       sortedTeams.sort(Comparator.comparingInt(Team::getPoints).reversed());
+
+                       System.out.println("===============================");
+                       System.out.printf("TABELA CAMPEONATO %s\n", league.getName());
+                       System.out.println("===============================");
+                       System.out.println("  TIME  | GOLS | PONTOS |");
+                       for(Team team2 : sortedTeams){
+                            System.out.printf("| %-10s | %-6d | %-7d |\n", team2.getName(), team2.getGoals(), team2.getPoints());
+                       }
+
                         break;
                         default: 
                         System.out.println("fail: opção invalida");
