@@ -37,6 +37,20 @@ class Team {
         return coach;
     }
 
+    public boolean playerExist(){
+        if(players.size() != 0){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean coachExist(){
+        if(coach.getExperience() >= 0){
+            return true;
+        }
+        return false;
+    }
+
     public Player getPlayer(String playerName) {
         for (Player player : players) {
             if (player.name.equals(playerName)) {

@@ -17,15 +17,15 @@ public class Main {
                 try {
                     System.out.println("-----------------MENU-----------------");
                     System.out.println("1- Adicionar Campeonato \n2- Adicionar Time \n3- Excluir Time \n"
-                            + "4- Contratar Jogador \n5- Demitir Jogador \n6- Contratar Tecnico \n7- Mostrar Time \n"
-                            + "8- Jogar Partida \n9- Mostrar Tabela");
+                            + "4- Contratar Jogador \n5- Demitir Jogador \n6- Contratar Técnico \n7- Mostrar Time \n"
+                            + "8- Jogar Partida \n9- Mostrar Tabela \n10- Mostrar vencedor");
 
                     System.out.println("Escolha uma opção:");
 
-                    int opcion = scanner.nextInt();
+                    int option = scanner.nextInt();
                     scanner.nextLine();
 
-                    switch (opcion) {
+                    switch (option) {
                         case 1:
                             if (league == null) {
                                 System.out.println("\nNome do campeonato:");
@@ -116,10 +116,10 @@ public class Main {
                             }
 
                             System.out.println("Qual o time do jogador?");
-                            String timeNome = scanner.nextLine();
+                            String timeName = scanner.nextLine();
 
-                            if (league.checkTeam(timeNome)) {
-                                Team time = league.getTeam(timeNome);
+                            if (league.checkTeam(timeName)) {
+                                Team time = league.getTeam(timeName);
                                 System.out.println("\nNome do Jogador");
                                 String playerToRemove = scanner.nextLine();
 
@@ -177,10 +177,11 @@ public class Main {
                             }
 
                             System.out.println("Qual time você quer ver?");
-                            String NomeTime = scanner.nextLine();
+                            league.showAllTeams();
+                            String TeamNameToShow = scanner.nextLine();
 
-                            if (league.getTeam(NomeTime) != null) {
-                                Team equip = league.getTeam(NomeTime);
+                            if (league.getTeam(TeamNameToShow) != null) {
+                                Team equip = league.getTeam(TeamNameToShow);
                                 if (equip != null && equip.players != null && equip.getCoach() != null) {
                                     equip.ShowTeam();
                                 } else {
@@ -200,6 +201,12 @@ public class Main {
                             if (team == null || league.leagueSize() < 2) {
                                 System.out.println("fail: não existe time(s) suficientes (Mínimo de 2 times na Liga)");
                                 break;
+                            }
+                            if (!team.playerExist()) {
+                                System.out.println("Ainda não existem jogadores suficientes");
+                            }
+                            if (!team.coachExist()) {
+                                System.out.println("Ainda não existem técnicos suficientes");
                             }
 
                             System.out.println("Qual o time jogará em casa?");
@@ -244,17 +251,50 @@ public class Main {
                             List<Team> sortedTeams = new ArrayList<>(league.getTeams());
                             sortedTeams.sort(Comparator.comparingInt(Team::getPoints).reversed());
 
-                            System.out.println("===============================");
-                            System.out.printf("TABELA CAMPEONATO %s\n", league.getName());
-                            System.out.println("===============================");
-                            System.out.println("  TIME  | GOLS | PONTOS |");
+                            System.out.println("===================================");
+                            System.out.printf("| TABELA CAMPEONATO %s | Temp %d |\n", league.getName(), league.season);
+                            System.out.println("===================================");
+                            System.out.println("    TIME     |  GOLS  | PONTOS |");
                             for (Team team2 : sortedTeams) {
-                                System.out.printf("| %-10s | %-6d | %-7d |\n", team2.getName(), team2.getGoals(),
-                                        team2.getPoints());
+                                System.out.printf("|  %-10s | %-6d | %-7d |\n", team2.getName(), team2.getGoals(),team2.getPoints());
                             }
 
                             break;
+                        case 10:
+                            if (league == null) {
+                                System.out.println("fail: não existe campeonato");
+                                break;
+                            }
 
+                            if (team == null || league.leagueSize() < 2) {
+                                System.out.println("fail: não existe time(s) suficientes (Mínimo de 2 times na Liga)");
+                                break;
+                            }
+                            if (!team.playerExist()) {
+                                System.out.println("Ainda não existem jogadores suficientes");
+                            }
+                            if (!team.coachExist()) {
+                                System.out.println("Ainda não existem técnicos suficientes");
+                            }
+
+                            List<Team> ganhador = new ArrayList<>(league.getTeams());
+                            ganhador.sort(Comparator.comparingInt(Team::getPoints).reversed());
+
+                            System.out.printf("====== O vencedor da temporada %d ======\n" +
+                                              "======== do Campeonato %s é ======== \n", league.season, league.getName());
+                            if(!ganhador.isEmpty()){
+                                Team vencedor = ganhador.get(0);
+                                for(int i = 0; i < ganhador.size(); i++){
+                                    Team vencedorPossivel = ganhador.get(i);
+                                    if(vencedor.getPoints() < vencedorPossivel.getPoints() ){
+                                        vencedor = vencedorPossivel;
+                                    }
+                                }
+                                System.out.println("========" + vencedor.getName() + "==========");
+                            }
+
+                            break;
+                            
                         default:
                             System.out.println("fail: opção inválida");
                             break;

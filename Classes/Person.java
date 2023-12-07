@@ -1,8 +1,8 @@
 package Classes;
 
 class Person {
-    String name;
-    int wage;
+    public String name;
+    public int wage;
 }
 
 class Player extends Person {
@@ -25,6 +25,6 @@ class Coach extends Person {
     }
 
     public int getExperience(){
-        return experience;
+        return this.experience;
     }
 }
